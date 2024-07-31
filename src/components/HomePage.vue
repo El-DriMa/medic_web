@@ -198,6 +198,16 @@ input[type="date"]:focus {
   background-color: #0056b3;
 }
 
+.button2{
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color:  #5b13b9;;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
