@@ -1,19 +1,21 @@
 <template>
 <div id="app">
-  <HandleLogin/>
+  <router-view/>
 </div>
 </template>
 
 <script>
 
-import HandleLogin from './components/HandleLogin.vue'
+import router from './router';
+
 
 export default {
   name: 'App',
-  components: {
-    HandleLogin
+  
+  setup(){
+    return {router}
   }
-}
+};
 </script>
 
 <style>

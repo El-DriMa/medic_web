@@ -1,14 +1,14 @@
 <template>
 <div class="login-container">
         <h2>Login</h2>
-        <form @submit.prevent="onClick">
+        <form @submit.prevent="submitLoginForm">
             <div class="input-group">
                 <label for="username">Username</label>
-                <input type="username" id="username" name="username" required>
+                <input type="username" id="username" name="username" v-model="username" required>
             </div>
             <div class="input-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" v-model="password" required>
             </div>
             <button type="submit">Login</button>
         </form>
@@ -17,6 +17,8 @@
 
 <script>
 import axios from 'axios'
+import { useRouter } from 'vue-router';
+
 export default{
     name:'HandleLogin',
     data(){
@@ -25,27 +27,28 @@ export default{
             password:'',
         };
     },
-    
-
-    async onClick(){
-        await this.login();
+    setup(){
+        const router=useRouter();
+        return { router };
     },
-
-    methods:{
-        async login(){
-            try{
-                const response=await axios.post('https://mediclab-hgeqa9e0aagjgce5.northeurope-01.azurewebsites.net/api/login',{
-                    username:this.username,
-                    password:this.password,
-                });
-                console.log("Login successfull",response.data);
-            }catch(error){
-                console.log("Error logging in",error);
-            }
-        }
-    }
-
+    methods: {
+    async submitLoginForm() {
+      await this.login();
+    },
+    async login() {
+      try {
+        const response = await axios.post('https://mediclab-hgeqa9e0aagjgce5.northeurope-01.azurewebsites.net/api/login', {
+          username: this.username,
+          password: this.password,
+        });
+        console.log("Login successful", response.data);
+        this.router.push('/hello-world'); 
+      } catch (error) {
+        console.log("Error logging in", error);
+      }
+    },
 }
+};
 
 
 </script>
