@@ -49,6 +49,7 @@ export default {
           password: this.password,
         });
         console.log("Login successful", response.data);
+        
         Swal.fire({
           icon: 'success', 
           title: 'Login Successful',
@@ -115,6 +116,7 @@ body {
 .header {
   text-align: center;
   margin-bottom: 30px;
+  display:block;
 }
 
 .header h1 {
