@@ -99,11 +99,11 @@
           <div class="input">
             <label class="input-label" for="dateOfBirth">Date of birth:</label>
             <div class="input-field">
-              <input v-model="selectedUser.dateOfBirth" type="date" />
+              <input v-model="selectedUser.dateOfBirth" type="datetime-local" />
             </div>
           </div>
           <div class="userDetailsButtons">
-            <button type="submit" class="button3">Save changes</button>
+            <button type="submit" class="button3" @click="updateUser(selectedUser)">Save changes</button>
             <button type="submit" class="button3" @click="blockUser(selectedUser.id)">Block user</button>
           </div>
           <div class="close-button-container">
@@ -192,6 +192,26 @@ export default {
         console.log('Error fetching user data');
       }
     },
+    async updateUser(user) {
+      try {
+        const response = await axios.put(`https://mediclab-hgeqa9e0aagjgce5.northeurope-01.azurewebsites.net/api/users/update/${user.id}`, user, {
+        headers: {
+        'Content-Type': 'application/json'
+        }
+       });
+        this.selectedUser = response.data;
+        Swal.fire({
+        icon: 'success',
+        title: 'User updated Successfully',
+        text: 'You have successfully updated the user!',
+        timer: 5000
+          });
+          this.showDetailsModal=false;
+        this.fetchData();
+        } catch (error) {
+      console.error('Error updating user:', error.response ? error.response.data : error.message);
+      }
+    },
     async blockUser(id){
         await axios.post(`https://mediclab-hgeqa9e0aagjgce5.northeurope-01.azurewebsites.net/api/users/block/${id}`);
         this.getUserDetails(id);
@@ -270,7 +290,8 @@ form {
 input[type="text"],
 input[type="password"],
 input[type="number"],
-input[type="date"] {
+input[type="date"],
+input[type="datetime-local"] {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -281,7 +302,8 @@ input[type="date"] {
 input[type="text"]:focus,
 input[type="password"]:focus,
 input[type="number"]:focus,
-input[type="date"]:focus {
+input[type="date"]:focus,
+input[type="datetime-local"]:focus {
   border-color: #007bff;
 }
 
