@@ -2,7 +2,7 @@
   <div>
     <div class="header">
       <h2 class="listOfUsersHeader">List of users</h2>
-      <button class="button button">Log out</button></div>
+      <button class="button button" @click="logout">Log out</button></div>
     <button @click="showModal = true" class="button" >Add User</button>
     <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
       <div class="modal-content">
@@ -56,11 +56,16 @@
 
 <script>
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'HomePage',
   props: {
     msg: String
+  },
+  setup() {
+    const router = useRouter();
+    return { router };
   },
   data(){
     return {
@@ -80,6 +85,7 @@ export default {
  
   async mounted() {
     await this.fetchData();
+    this.disableBackNavigation();
   },
   methods: {
     async fetchData() {
@@ -107,13 +113,23 @@ export default {
     } catch (error) {
       console.error('Error adding user', error.response ? error.response.data : error.message);
     }
-    }
+    },
+    async logout(){
+      this.router.push('/'); 
+    },
+    disableBackNavigation() {
+    window.history.pushState(null, '', window.location.href);
+    window.onpopstate = function () {
+      window.history.go(1);
+    };
+  }
   }
 }
 </script>
 
 
 <style>
+
 
 
 

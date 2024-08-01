@@ -100,7 +100,6 @@ body {
   justify-content: center;
   background: #e0e0e0;
   padding: 20px;
-  margin: 0;
 }
 
 .page-container {
@@ -192,4 +191,6 @@ body {
 .button2:hover {
   background-color: #4a0d91;
 }
+
+
 </style>
