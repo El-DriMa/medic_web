@@ -93,7 +93,7 @@
           <div class="input">
             <label class="input-label" for="imageUrl">Image URL:</label>
             <div class="input-field">
-              <input v-model="selectedUser.imageURL" placeholder="Image URL" required type="text" />
+              <input v-model="selectedUser.imageUrl" placeholder="Image URL" required type="text" />
             </div>
           </div>
           <div class="input">
