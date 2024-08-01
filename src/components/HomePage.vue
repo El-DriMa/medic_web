@@ -1,10 +1,16 @@
 <template>
   <div>
     <div class="header">
-      <h2 class="listOfUsersHeader">List of users</h2>
-      <button class="button button" @click="logout">Log out</button>
+      <div class="welcome-section">
+        <h1 class="welcome-message">Welcome</h1>
+        <p class="list-of-users-text">List of all users</p>
+      </div>
+
+      <div class="button-section">
+        <button @click="showModal = true" class="button3">Add User</button>
+        <button @click="logout" class="button3">Log out</button>
+      </div>
     </div>
-    <button @click="showModal = true" class="button">Add User</button>
     <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
       <div class="modal-content">
         <h2 class="h2Color">Add new user</h2>
@@ -142,11 +148,11 @@ export default {
         imageUrl: '',
         dateOfBirth: ''
       },
-      selectedUser: null
+      selectedUser: null,
     };
   },
 
- 
+
   async mounted() {
     await this.fetchData();
     this.disableBackNavigation();
@@ -237,12 +243,6 @@ export default {
 
 <style>
 
-.listOfUsersHeader{
-  color: #5b13b9;
-  text-align: left;
-  margin-left: 1.2%;
-}
-
 body {
   font-family: Arial, sans-serif;
 }
@@ -251,10 +251,30 @@ body {
   color: #5b13b9;
 }
 
-.header{
+.welcome-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.welcome-message {
+  font-size: 24px;
+  font-family: 'Arial', sans-serif; 
+  color: #5b13b9;
+  margin: 0;
+}
+
+.list-of-users-text {
+  font-size: 18px;
+  font-family: 'Arial', sans-serif; 
+  color: #333;
+}
+
+/* Header Styles */
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 20px 0;
 }
 
 form {
