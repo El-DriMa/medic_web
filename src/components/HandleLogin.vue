@@ -75,6 +75,7 @@ export default {
 </script>
 
 <style scoped>
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
 
 * {
@@ -110,6 +111,7 @@ body {
   padding: 30px;
   border-radius: 12px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  margin-top: 5%;
 }
 
 .header {
@@ -145,18 +147,6 @@ body {
   margin-bottom: 20px;
 }
 
-.input-box input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-
-.input-box input:focus {
-  border-color: #007bff;
-  outline: none;
-}
-
 .text {
   font-size: 14px;
   text-align: center;
@@ -188,9 +178,6 @@ body {
   width:100%;
 }
 
-.button2:hover {
-  background-color: #4a0d91;
-}
 
 
 </style>

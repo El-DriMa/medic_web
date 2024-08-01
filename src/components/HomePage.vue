@@ -2,8 +2,9 @@
   <div>
     <div class="header">
       <h2 class="listOfUsersHeader">List of users</h2>
-      <button class="button button" @click="logout">Log out</button></div>
-    <button @click="showModal = true" class="button" >Add User</button>
+      <button class="button button" @click="logout">Log out</button>
+    </div>
+    <button @click="showModal = true" class="button">Add User</button>
     <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
       <div class="modal-content">
         <h2 class="h2Color">Add new user</h2>
@@ -43,13 +44,73 @@
       </thead>
       <tbody>
         <tr v-for="item in data" :key="item.id">
-          <td class="id-column">{{ item.id }}</td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.userName }}</td>
-          <td>{{ item.lastLoginDate }}</td>
+          <td @click="openDetailsModal(item)" class="id-column">{{ item.id }}</td>
+          <td @click="openDetailsModal(item)">{{ item.name }}</td>
+          <td @click="openDetailsModal(item)">{{ item.userName }}</td>
+          <td @click="openDetailsModal(item)">{{ new Date(item.lastLoginDate).toLocaleDateString() }}</td>
         </tr>
       </tbody>
     </table>
+    <div v-if="showDetailsModal" class="modal-overlay" @click.self="showDetailsModal = false">
+      <div class="modal-content">
+        <div v-if="selectedUser">
+          <div class="input">
+            <label class="input-label" for="id">User ID:</label>
+            <div class="input-field">
+              <input v-model="selectedUser.id" readonly type="text" />
+            </div>
+          </div>
+          <div class="input">
+            <label class="input-label" for="name">Name:</label>
+            <div class="input-field">
+              <input v-model="selectedUser.name" required type="text" />
+            </div>
+          </div>
+          <div class="input">
+            <label class="input-label" for="username">Username:</label>
+            <div class="input-field">
+              <input v-model="selectedUser.username" required type="text" />
+            </div>
+          </div>
+          <div class="input">
+            <label class="input-label" for="orders">Orders:</label>
+            <div class="input-field">
+              <input v-model="selectedUser.orders" type="number" min="0" max="10" required />
+            </div>
+          </div>
+          <div class="input">
+            <label class="input-label" for="lastLoginDate">Last login date:</label>
+            <div class="input-field">
+              <input :value="new Date(selectedUser.lastLoginDate).toLocaleDateString()" type="text" readonly />
+            </div>
+          </div>
+          <div class="input">
+            <label class="input-label" for="imageUrl">Image URL:</label>
+            <div class="input-field">
+              <input v-model="selectedUser.imageURL" placeholder="Image URL" required type="text" />
+            </div>
+          </div>
+          <div class="input">
+            <label class="input-label" for="status">Status:</label>
+            <div class="input-field">
+              <input v-model="selectedUser.status" placeholder="Status (Active,Inactive,Blocked)" required type="text" />
+            </div>
+          </div>
+          <div class="input">
+            <label class="input-label" for="dateOfBirth">Date of birth:</label>
+            <div class="input-field">
+              <input v-model="selectedUser.dateOfBirth" type="date" />
+            </div>
+          </div>
+          <div class="userDetailsButtons">
+            <button type="submit" class="button3">Save changes</button>
+            <button type="submit" class="button3" @click="blockUser(selectedUser.id)">Block user</button>
+          </div>
+          <div class="close-button-container">
+          <button @click="showDetailsModal = false" class="button3">Close</button></div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -57,6 +118,7 @@
 <script>
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import Swal from 'sweetalert2';
 
 export default {
   name: 'HomePage',
@@ -70,15 +132,17 @@ export default {
   data(){
     return {
       showModal:false,
+      showDetailsModal:false,
       data:[],
       newUser: {
         name: '',
         username: '',
         passwordHash:'',
         orders: '',
-        imageURL: '',
+        imageUrl: '',
         dateOfBirth: ''
-      }
+      },
+      selectedUser: null
     };
   },
 
@@ -102,21 +166,44 @@ export default {
       this.data.push(response.data);
       this.newUser = {
         name: '',
-        userName: '',
+        username: '',
         passwordHash:'',
         orders: '',
         imageUrl: '',
         dateOfBirth: ''
       };
+      Swal.fire({
+          icon: 'success', 
+          title: 'User added Successfully',
+          text: 'You have successfully added new user!',
+          timer: 5000
+        });
       this.showModal=false;
       this.fetchData();
     } catch (error) {
       console.error('Error adding user', error.response ? error.response.data : error.message);
     }
     },
+    async getUserDetails(id){
+      try {
+        const response=await axios.get(`https://mediclab-hgeqa9e0aagjgce5.northeurope-01.azurewebsites.net/api/users/details/${id}`);
+        this.selectedUser=response.data;
+      } catch (error) {
+        console.log('Error fetching user data');
+      }
+    },
+    async blockUser(id){
+        await axios.post(`https://mediclab-hgeqa9e0aagjgce5.northeurope-01.azurewebsites.net/api/users/block/${id}`);
+        this.getUserDetails(id);
+    },
     async logout(){
       this.router.push('/'); 
     },
+    openDetailsModal(user) {
+      this.getUserDetails(user.id);
+      this.showDetailsModal = true;
+    },
+    
     disableBackNavigation() {
     window.history.pushState(null, '', window.location.href);
     window.onpopstate = function () {
@@ -129,9 +216,6 @@ export default {
 
 
 <style>
-
-
-
 
 .listOfUsersHeader{
   color: #5b13b9;
@@ -163,10 +247,20 @@ form {
 }
 
 .input {
-  margin-bottom: 15px;
   display: flex;
-  align-items: center;
+    align-items: center;
+    margin-bottom: 15px;
 }
+
+.input-label {
+    flex: 0 0 20%;
+    font-weight: bold;
+    margin-right: 10px;
+    text-align: left;
+} 
+.input-field {
+    flex: 1;
+  }
 
 .input i {
   margin-right: 10px;
@@ -181,6 +275,7 @@ input[type="date"] {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box;
 }
 
 input[type="text"]:focus,
@@ -193,6 +288,12 @@ input[type="date"]:focus {
 .button {
   display: flex;
   justify-content: center;
+}
+
+.userDetailsButtons {
+  display: flex;
+  gap: 0.2px; 
+  width: 100%;
 }
 
 
@@ -224,6 +325,25 @@ input[type="date"]:focus {
   cursor: pointer;
 }
 
+.button3 {
+  flex: 1;
+  text-align: center;
+  padding: 10px 20px; 
+  border: none;
+  border-radius: 4px;
+  background-color: #5b13b9;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  box-sizing: border-box;
+  margin: 3px;
+}
+
+.close-button-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
 .modal-overlay {
   position: fixed;
   top: 0;
