@@ -2,12 +2,10 @@
   <div>
     <div class="header">
       <div class="welcome-section">
-        <h1 class="welcome-message">Welcome</h1>
-        <p class="list-of-users-text">List of all users</p>
+        <h1 class="welcome-message">Welcome to admin panel</h1>
       </div>
-
       <div class="button-section">
-        <button @click="showModal = true" class="button3">Add User</button>
+        <button @click="showModal = true" class="button3">Add new user</button>
         <button @click="logout" class="button3">Log out</button>
       </div>
     </div>
@@ -28,7 +26,7 @@
             <input v-model="newUser.orders" type="number" min="0" max="10" placeholder="Select order numbers (1-10)" required />
           </div>
           <div class="input">
-            <input v-model="newUser.imageURL" placeholder="Image URL" required type="text"/>
+            <input v-model="newUser.imageUrl" placeholder="Image URL" required type="text"/>
           </div>
           <div class="input">
             <input v-model="newUser.dateOfBirth" type="date" placeholder="Enter date of birth" required />
@@ -39,13 +37,18 @@
         </form>
       </div>
     </div>
+    <br>
+    <div class="list-of-users-text">
+    <h4>List of all users</h4>
+    <h5>Click on user for more details</h5>
+    </div>
     <table class="user-table">
       <thead>
         <tr>
           <th class="id-column">ID</th>
           <th>Name</th>
           <th>Username</th>
-          <th>Last Login</th>
+          <th>Last Login Date</th>
         </tr>
       </thead>
       <tbody>
@@ -59,7 +62,7 @@
     </table>
     <div v-if="showDetailsModal" class="modal-overlay" @click.self="showDetailsModal = false">
       <div class="modal-content">
-        <div v-if="selectedUser">
+        <div v-if="selectedUser" class="modalPosition">
           <div class="input">
             <label class="input-label" for="id">User ID:</label>
             <div class="input-field">
@@ -99,7 +102,11 @@
           <div class="input">
             <label class="input-label" for="status">Status:</label>
             <div class="input-field">
-              <input v-model="selectedUser.status" placeholder="Status (Active,Inactive,Blocked)" required type="text" />
+              <select v-model="selectedUser.status" placeholder="Status (Active,Inactive)" required>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="Blocked" disabled>Blocked</option >
+                </select>
             </div>
           </div>
           <div class="input">
@@ -128,9 +135,6 @@ import Swal from 'sweetalert2';
 
 export default {
   name: 'HomePage',
-  props: {
-    msg: String
-  },
   setup() {
     const router = useRouter();
     return { router };
@@ -245,21 +249,21 @@ export default {
 
 body {
   font-family: Arial, sans-serif;
-}
-
-.h2Color{
-  color: #5b13b9;
+  padding: 15px;
+  background:WHITE;
 }
 
 .welcome-section {
   text-align: center;
-  margin-bottom: 20px;
+  margin: 0px;
 }
 
 .welcome-message {
   font-size: 24px;
-  font-family: 'Arial', sans-serif; 
-  color: #5b13b9;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: 600;
+  font-size:50px;
+  color: #574476;
   margin: 0;
 }
 
@@ -267,14 +271,20 @@ body {
   font-size: 18px;
   font-family: 'Arial', sans-serif; 
   color: #333;
+  text-align: left;
 }
 
-/* Header Styles */
+.list-of-users-text h5 {
+  font-size: 13px;
+  font-family: 'Arial', sans-serif; 
+  text-align: left;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 20px 0;
+  margin: 10px 0;
 }
 
 form {
@@ -283,7 +293,7 @@ form {
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  background-color: #f9f9f9;
+  background-color: white;
 }
 
 .input {
@@ -311,7 +321,9 @@ input[type="text"],
 input[type="password"],
 input[type="number"],
 input[type="date"],
-input[type="datetime-local"] {
+input[type="datetime-local"],
+select,
+option {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -319,11 +331,13 @@ input[type="datetime-local"] {
   box-sizing: border-box;
 }
 
+
 input[type="text"]:focus,
 input[type="password"]:focus,
 input[type="number"]:focus,
 input[type="date"]:focus,
-input[type="datetime-local"]:focus {
+input[type="datetime-local"]:focus,
+select:focus {
   border-color: #007bff;
 }
 
@@ -339,11 +353,15 @@ input[type="datetime-local"]:focus {
 }
 
 
+.button button:hover {
+  background-color: #574476;
+}
+
 .button button {
   align-items: center;
   justify-content: center;
   color: #fff;
-  background: #7d2ae8;
+  background:#574476;
   border-radius: 6px;
   padding: 10px 20px; 
   cursor: pointer;
@@ -352,16 +370,11 @@ input[type="datetime-local"]:focus {
   transition: all 0.4s ease;
   position:absolute;
 }
-
-.button button:hover {
-  background-color: #0056b3;
-}
-
 .button2{
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
-  background-color:  #5b13b9;;
+  background: #574476;
   color: white;
   font-size: 16px;
   cursor: pointer;
@@ -373,7 +386,7 @@ input[type="datetime-local"]:focus {
   padding: 10px 20px; 
   border: none;
   border-radius: 4px;
-  background-color: #5b13b9;
+  background:#574476;
   color: white;
   font-size: 16px;
   cursor: pointer;
@@ -400,13 +413,16 @@ input[type="datetime-local"]:focus {
 }
 
 .modal-content {
-  background: #fff;
+  background: white;
   padding: 20px;
   border-radius: 8px;
   width: 80%;
   max-width: 500px;
   position: relative;
-  height: 70%;
+}
+
+.modalPosition{
+  margin:2%
 }
 
 .close-button {
@@ -458,7 +474,7 @@ form {
   align-items: center;
   justify-content: center;
   color: #fff;
-  background: #7d2ae8;
+  background: #574476;
   border-radius: 6px;
   padding: 10px 20px; 
   cursor: pointer;
@@ -470,41 +486,25 @@ form {
 }
 
 .button:hover {
-  background: #5b13b9; 
+  background: #574476;
 }
 
-.user-table {
+table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 60px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 20px;
 }
-
-.user-table th, .user-table td {
-  padding: 12px 15px;
+th, td {
+  padding: 12px;
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
-
-.user-table .id-column {
-  width: 10%;
+th {
+  background-color: black;
+  color: white;
 }
-
-.user-table th:not(.id-column), .user-table td:not(.id-column) {
-  width: 30%; 
+.id-column {
+  cursor: pointer;
 }
-
-.user-table th {
-  background-color: #f4f4f4;
-  color: #5b13b9;
-}
-
-.user-table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.user-table tr:hover {
-  background-color: #f1f1f1;
-}
-
 </style>
+

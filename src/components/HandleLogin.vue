@@ -56,7 +56,7 @@ export default {
           text: 'You have successfully logged in!',
           timer: 5000
         });
-        this.router.push('/home-page'); 
+        this.router.push('/home-page');
       } catch (error) {
         console.log("Error logging in", error);
         Swal.fire({
@@ -118,6 +118,7 @@ body {
   text-align: center;
   margin-bottom: 30px;
   display:block;
+  background-color: white;
 }
 
 .header h1 {
@@ -170,7 +171,7 @@ body {
   padding: 12px 25px;
   border: none;
   border-radius: 8px;
-  background-color: #5b13b9;
+  background-color: #574476;
   color: white;
   font-size: 16px;
   cursor: pointer;
