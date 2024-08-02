@@ -184,7 +184,7 @@ export default {
       };
       Swal.fire({
           icon: 'success', 
-          title: 'User added Successfully',
+          title: 'User added successfully',
           text: 'You have successfully added new user!',
           timer: 5000
         });
@@ -212,7 +212,7 @@ export default {
         this.selectedUser = response.data;
         Swal.fire({
         icon: 'success',
-        title: 'User updated Successfully',
+        title: 'User updated successfully',
         text: 'You have successfully updated the user!',
         timer: 5000
           });
@@ -225,6 +225,13 @@ export default {
     async blockUser(id){
         await axios.post(`https://mediclab-hgeqa9e0aagjgce5.northeurope-01.azurewebsites.net/api/users/block/${id}`);
         this.getUserDetails(id);
+        Swal.fire({
+        icon: 'success',
+        title: 'User blocked successfully',
+        text: 'You have successfully blocked the user!',
+        timer: 5000
+        });
+        this.showDetailsModal=false;
     },
     async logout(){
       this.router.push('/'); 
